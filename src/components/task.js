@@ -1,9 +1,12 @@
 import React from "react";
 
 function Task(props){
+
+  
+ 
 return(
-    <div className="todo-item">
-                        <div className="checker"><span className=""><input type="checkbox"/></span></div>
+    <div className={`todo-item ${props.checked} `}>
+                        <div className="checker"><span className=""><input type="checkbox" onClick={props.check}/></span></div>
                             <span>{props.taskItem}</span>
                             <a href="" className="float-right remove-todo-item"><i className="icon-close"></i></a>
                         </div>

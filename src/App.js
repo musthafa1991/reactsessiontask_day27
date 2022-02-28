@@ -1,45 +1,63 @@
 import logo from './logo.svg';
 import './App.css';
 import Task from './components/task';
-import { useState } from 'react';
-
-
+import { useEffect, useState } from 'react';
 
 function App() {
-  let taskList = ["Create theme", "Work on wordpress", "Organize office main department", "Error solve in HTML template"];
-  const [list, setList] = useState([...taskList]);
+  const [allList, setAllList] = useState([{ task: "Create theme", completed: false }, { task: "Work on wordpress", completed: false }, { task: "Organize office main department", completed: false }, { task: "Error solve in HTML template", completed: false }]);
+  console.log(allList);
+
   const [inputText, setinputText] = useState("");
+  const [list, setList] = useState([...allList]);
+  console.log(list);
+  useEffect(() => {
+
+    setList([...allList]);
+  }, [allList])
+
 
   const handleChange = (e) => {
     setinputText(e.target.value);
   }
-  
+
   const handleSubmit = (e) => {
+
+    setAllList([...allList, { task: inputText, completed: false }]);
+    // setList([...list,{ task: inputText, completed: false }])
+
     e.preventDefault();
-    setList([...list, inputText]);
+
   }
 
-    const[activelist,setactive]=useState([]);
-    const[completelist,setcomplete]=useState([])
-
-    let complete=()=>{
-
+  let checking = (value) => {
+    let index = allList.findIndex((item) => item.task == value.task);
+    if (value.completed === false) {
+      allList[index].completed = true;
+      setList([...allList]);
     }
-  
-    var checker;
-    let checking=(e)=>{
-      console.log(e)
-      if(e.target.checked===true){
-         console.log(true)
-         checker="complete";
-      }else{
-          checker="";
-      }
+    else {
+      allList[index].completed = false;
+      setList([...allList]);
+    }
   }
-  
 
-  
- 
+  let all = () => {
+    setList([...allList]);
+  }
+
+  let active = (e) => {
+    e.preventDefault();
+    let actList = allList.filter((item => item.completed == false));
+    setList([...actList]);
+    console.log(actList);
+  }
+
+  let complete = () => {
+    let completed = allList.filter((item) => item.completed == true);
+    console.log(completed);
+    setList([...completed])
+  }
+
   return (
     <div className="container">
       <div className="row">
@@ -54,38 +72,29 @@ function App() {
 
 
               <ul className="nav nav-pills todo-nav">
-                <li role="presentation" className="nav-item all-task active" ><a href="#" className="nav-link">All</a></li>
-                <li role="presentation" className="nav-item active-task" ><a href="" className="nav-link">Active</a></li>
+                <li role="presentation" className="nav-item all-task active" ><a href="#" className="nav-link" onClick={all}>All</a></li>
+                <li role="presentation" className="nav-item active-task" ><a href="" className="nav-link" onClick={active}>Active</a></li>
                 <li role="presentation" className="nav-item completed-task"><a href="#" className="nav-link" onClick={complete}>Completed</a></li>
 
-                {/* <li role="presentation" className="nav-item all-task active"><a href="#" className="nav-link">All</a></li>
-                <li role="presentation" className="nav-item active-task"><a href="" className="nav-link">Active</a></li>
-                <li role="presentation" className="nav-item completed-task"><a href="#" className="nav-link">Completed</a></li> */}
               </ul>
-              
+
               <div className="todo-list">
-               
+
                 {
                   list.map((item) => {
                     return <div key={item}>
-                      <Task taskItem={item} check={checking} checked={checker}></Task>
+                      <Task taskItem={item} check={checking}></Task>
                     </div>
-
-
                   })
-
-
                 }
-
-
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    
-    
+
+
   );
 }
 
